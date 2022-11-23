@@ -1,40 +1,67 @@
 import random
+player_number=int(input('player number='))
+card_number=int(input('card number='))
 arr=[]
 a=[]
+p=1
 colors=["r","g","y","b"]
 nums=["0","1","2","3","4","5","6","7","8","9","R","+2","B"]
+i=1
 #give the cards
 for c in colors:
- for n in nums:
-  arr.append(f"{c}{n}")
-for p in range(3):
- a.append([])
- for i in range(5):
-  b=arr[random.randint(0,len(arr)-1)]
-  arr.remove(b)
-  a[p].append (b)
- print(a[p])
-print (arr)
-floor=arr[random.randint(0,len(arr)-1)]
-print(floor)
+  for n in nums:
+    arr.append(f"{c}{n}")
+#define floor
+onfloor=arr[random.randint(0,len(arr)-1)]
+print(onfloor)
 loop=True
+
+def givecards(num,p):
+  for i in range(num):
+    b = arr[random.randint(0, len(arr) - 1)]
+    arr.remove(b)
+    a[p].append(b)
+    
+def dropcard(card,p):
+  global onfloor
+  a[p].remove(card)
+  arr.append(card)
+  onfloor=card
+  
+def check_unique(x):
+  global p
+  global i
+  if x[1:]=="+2" :
+    givecards(2,(p+1)%player_number)
+  elif x[1:]=="B":
+    p+=i
+  elif x[1:]=="R":
+    i=-1
+  
+for p in range(player_number):
+  a.append([])
+  givecards(card_number,p)
+  print(a[p])
+print (arr)
+
 while loop==True:
- i=0
- while i< len(a):
+  if len(a[p%player_number-1])<1:
+    break
+  
+  print(onfloor,"player", p%player_number , a[p%player_number] )
   x=input()
-  if x in a[i] and (floor[0]==x[0] or    floor[1:]==x[1:]):
-   a[i].remove(x)
-   arr.append(b)
-   floor=x
+  if x in a[p%player_number] and (onfloor[0]==x[0] or onfloor[1:]==x[1:]):
+    dropcard(x, p%player_number)
+    check_unique(x)
   elif x=="d":
-   b=arr[random.randint(0,len(arr)-1)]
-   arr.remove(b)
-   a[i].append (b)
-  elif len(a[i])==0:
-   loop=False
+    givecards(1,p%player_number)
+    b=a[p%player_number][-1]
+    if (onfloor[0]==b[0] or onfloor[1:]==b[1:]):
+      dropcard(b,p%player_number)
+    elif len(a[p%player_number])==0:
+      loop=False
   else:
-   print("ERROR")
-   i-=1
-  i+=1
-  print("p",i,a[i-1])
+    print("ERROR")
+    p-=i
+  p+=i
 print("We have a winner")
