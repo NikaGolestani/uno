@@ -1,7 +1,7 @@
 import random
 player_number=int(input('player number='))
 card_number=int(input('card number='))
-arr=[]
+arr=["J+4","JC","JH"]*3
 a=[]
 p=0
 colors=["r","g","y","b"]
@@ -27,16 +27,25 @@ def dropcard(card,p):
   a[p].remove(card)
   arr.append(card)
   onfloor=card
+  check_unique(card)
   
 def check_unique(x):
   global p
   global i
+  global onfloor
   if x[1:]=="+2" :
     givecards(2,(p+1)%player_number)
   elif x[1:]=="B":
     p+=i
   elif x[1:]=="R":
     i=-i
+  elif x[0]=="J":
+    if x[1:]=="+4":
+      givecards(4,(p+1)%player_number)
+    elif x[1:]=="H":
+      hand=int(input())
+      a[p%player_number],a[hand] =a[hand],a[p%player_number]
+    onfloor=input()+" "
   
 for k in range(player_number):
   a.append([])
@@ -44,24 +53,25 @@ for k in range(player_number):
   print(a[k])
 print (arr)
 
-while loop==True:
+while True :
   if len(a[p%player_number-1])<1:
     break
   
   print(onfloor,"player", p%player_number , a[p%player_number] )
   x=input()
-  if x in a[p%player_number] and (onfloor[0]==x[0] or onfloor[1:]==x[1:]):
+  if x in a[p%player_number] and ((onfloor[0]==x[0] or onfloor[1:]==x[1:]) or x[0]=="J"):
     dropcard(x, p%player_number)
-    check_unique(x)
+    
   elif x=="d":
     givecards(1,p%player_number)
     b=a[p%player_number][-1]
-    if (onfloor[0]==b[0] or onfloor[1:]==b[1:]):
+    if (onfloor[0]==b[0] or onfloor[1:]==b[1:]or b[0]=="J"):
       dropcard(b,p%player_number)
     elif len(a[p%player_number])==0:
-      loop=False
+      break
+    
   else:
     print("ERROR")
     p-=i
   p+=i
-print("We have a winner")
+print("Player",p%player_number,"WINS!!!")
