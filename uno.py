@@ -3,7 +3,7 @@ player_number=int(input('player number='))
 card_number=int(input('card number='))
 arr=[]
 a=[]
-p=1
+p=0
 colors=["r","g","y","b"]
 nums=["0","1","2","3","4","5","6","7","8","9","R","+2","B"]
 i=1
@@ -36,12 +36,12 @@ def check_unique(x):
   elif x[1:]=="B":
     p+=i
   elif x[1:]=="R":
-    i=-1
+    i=-i
   
-for p in range(player_number):
+for k in range(player_number):
   a.append([])
-  givecards(card_number,p)
-  print(a[p])
+  givecards(card_number,k)
+  print(a[k])
 print (arr)
 
 while loop==True:
